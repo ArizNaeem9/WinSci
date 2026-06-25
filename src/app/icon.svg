@@ -1,0 +1,15 @@
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="WinSci">
+  <rect width="32" height="32" rx="8" fill="#2ec5f0" />
+  <path
+    d="M5.5 8.5 L10.5 24 L16 13.5 L21.5 24 L26.5 8.5"
+    fill="none"
+    stroke="#06121b"
+    stroke-width="3.4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M25.5 3.2c.35 2.1 1.15 2.9 3.3 3.3c-2.15 .4 -2.95 1.2 -3.3 3.3c-.35 -2.1 -1.15 -2.9 -3.3 -3.3c2.15 -.4 2.95 -1.2 3.3 -3.3z"
+    fill="#ffffff"
+  />
+</svg>

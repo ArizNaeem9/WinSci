@@ -1,0 +1,306 @@
+@import "tailwindcss";
+
+/* ============================================================
+   WinSci - Design tokens
+   Bold, dark, illustrated. Deep navy canvas with bright,
+   multi-accent stickers (Mutwerk-inspired). Built so the
+   accessibility high-contrast mode flips to pure black + white.
+   ============================================================ */
+
+:root {
+  /* Surfaces */
+  --background: #0a0e1c; /* deep navy-black */
+  --surface: #131a30; /* card */
+  --surface-2: #1b2440; /* raised panel */
+
+  /* Ink */
+  --foreground: #f4f7ff;
+  --muted: #aeb8d6; /* ~7:1 on background */
+
+  /* Brand accents (pulled from the illustration palette) */
+  --primary: #2ec5f0; /* electric cyan - primary CTA */
+  --primary-strong: #16a8d6;
+  --primary-soft: #0f2b3d;
+
+  /* Restrained palette: cyan is the only brand colour. These aliases keep the
+     existing utilities working but all resolve to cyan; red is reserved for
+     error states only (form validation). */
+  --accent: var(--primary);
+  --accent-strong: var(--primary-strong);
+
+  --yellow: var(--primary);
+  --purple: var(--primary);
+  --green: var(--primary);
+  --coral: #f87171; /* errors only */
+
+  /* Lines & focus */
+  --border: #273357;
+  --ring: #2ec5f0;
+
+  /* Sticker / clay shadows */
+  --shadow:
+    0 18px 40px -18px rgba(0, 0, 0, 0.7),
+    0 4px 12px -6px rgba(0, 0, 0, 0.5);
+  --glow: 0 0 0 0 rgba(46, 197, 240, 0);
+
+  --radius: 1.25rem;
+
+  --dur: 240ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --font-scale: 1;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-primary-soft: var(--primary-soft);
+
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-yellow: var(--yellow);
+  --color-purple: var(--purple);
+  --color-green: var(--green);
+  --color-coral: var(--coral);
+
+  --color-border: var(--border);
+
+  /* shadcn/ui token aliases (mapped to the WinSci palette) so copied
+     shadcn primitives like <Button> render on-brand, not default grey. */
+  --color-primary-foreground: #06121b;
+  --color-secondary: var(--surface-2);
+  --color-secondary-foreground: var(--foreground);
+  --color-accent-foreground: #1a0a14;
+  --color-destructive: var(--coral);
+  --color-destructive-foreground: #ffffff;
+  --color-muted-foreground: var(--muted);
+  --color-input: var(--border);
+  --color-ring: var(--primary);
+
+  --radius-clay: var(--radius);
+
+  --font-display: var(--font-display-face), system-ui, sans-serif;
+  --font-sans: var(--font-noto-sans), system-ui, sans-serif;
+  --font-urdu: var(--font-noto-urdu), serif;
+}
+
+/* ---------------- Base ---------------- */
+html {
+  font-size: calc(112.5% * var(--font-scale)); /* 18px base */
+  scroll-behavior: smooth;
+  background: var(--background);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+/* Urdu uses Nastaliq and needs more room */
+[lang="ur"], [dir="rtl"] {
+  font-family: var(--font-urdu);
+  line-height: 2.1;
+}
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] h4 {
+  font-family: var(--font-urdu);
+  line-height: 1.8;
+  letter-spacing: 0;
+}
+
+/* ---------------- Focus ---------------- */
+:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* ---------------- Surfaces ---------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.press {
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+    background-color var(--dur) var(--ease), border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.press:active { transform: translateY(2px); }
+
+/* Hide scrollbar on the gallery rail */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ---------------- Reveal-on-scroll: soft rise + blur ---------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(6px);
+  transition: opacity 480ms var(--ease), transform 480ms var(--ease), filter 480ms var(--ease);
+  will-change: opacity, transform, filter;
+}
+.reveal.is-visible { opacity: 1; transform: none; filter: none; }
+
+/* Staggered group: direct children reveal in gentle sequence */
+.reveal-group > * {
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(6px);
+  transition: opacity 480ms var(--ease), transform 480ms var(--ease), filter 480ms var(--ease);
+  will-change: opacity, transform, filter;
+}
+.reveal-group.is-visible > * { opacity: 1; transform: none; filter: none; }
+.reveal-group.is-visible > *:nth-child(1) { transition-delay: 40ms; }
+.reveal-group.is-visible > *:nth-child(2) { transition-delay: 100ms; }
+.reveal-group.is-visible > *:nth-child(3) { transition-delay: 160ms; }
+.reveal-group.is-visible > *:nth-child(4) { transition-delay: 220ms; }
+.reveal-group.is-visible > *:nth-child(5) { transition-delay: 280ms; }
+.reveal-group.is-visible > *:nth-child(6) { transition-delay: 340ms; }
+.reveal-group.is-visible > *:nth-child(n + 7) { transition-delay: 400ms; }
+
+/* Micro-interaction: hover lift for interactive cards */
+.lift {
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px -20px rgba(0, 0, 0, 0.75), 0 6px 14px -8px rgba(0, 0, 0, 0.55);
+}
+
+/* Micro-interaction: animated link underline (grows from the leading edge) */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: 0.1rem;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease);
+}
+[dir="rtl"] .link-underline::after { transform-origin: right; }
+.link-underline:hover::after,
+.link-underline:focus-visible::after { transform: scaleX(1); }
+
+/* float + sparkle animations */
+@keyframes float-soft { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.float-soft { animation: float-soft 6s var(--ease) infinite; }
+
+@keyframes float-soft-slow { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-16px) rotate(3deg); } }
+.float-soft-slow { animation: float-soft-slow 9s var(--ease) infinite; }
+
+@keyframes twinkle { 0%,100% { opacity: .35; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.1); } }
+.twinkle { animation: twinkle 3.2s ease-in-out infinite; }
+
+@keyframes bob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
+.bob { animation: bob 4s var(--ease) infinite; }
+
+@keyframes speak-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(46,197,240,.55); }
+  50% { box-shadow: 0 0 0 9px rgba(46,197,240,0); }
+}
+.is-speaking { animation: speak-pulse 1.4s ease-out infinite; }
+
+/* full-screen mobile menu entrance */
+@keyframes menu-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.menu-in { animation: menu-in 220ms var(--ease); }
+@keyframes menu-item-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.menu-item-in { animation: menu-item-in 320ms var(--ease) both; }
+
+/* ============================================================
+   ACCESSIBILITY MODES (toggled via <html data-*>)
+   ============================================================ */
+
+html[data-text="large"] { --font-scale: 1.18; }
+html[data-text="xlarge"] { --font-scale: 1.38; }
+
+/* High contrast: pure black + white, bright yellow primary, hard borders */
+html[data-contrast="high"] {
+  --background: #000000;
+  --surface: #000000;
+  --surface-2: #000000;
+  --foreground: #ffffff;
+  --muted: #ffffff;
+  --primary: #ffd60a;
+  --primary-strong: #ffe14d;
+  --primary-soft: #000000;
+  --accent: #ffd60a;
+  --accent-strong: #ffe14d;
+  --yellow: #ffd60a;
+  --purple: #ffffff;
+  --green: #ffffff;
+  --coral: #ffffff;
+  --border: #ffffff;
+  --ring: #ffd60a;
+  --shadow: none;
+}
+html[data-contrast="high"] .card { border-width: 2px; border-color: #fff; }
+html[data-contrast="high"] *:focus-visible { outline-color: #ffd60a; outline-width: 4px; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal,
+  .reveal-group > * { opacity: 1; transform: none; filter: none; }
+  .lift:hover { transform: none; }
+  .link-underline::after { transition: none; }
+}
+html[data-motion="reduced"] *,
+html[data-motion="reduced"] *::before,
+html[data-motion="reduced"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+html[data-motion="reduced"] .reveal,
+html[data-motion="reduced"] .reveal-group > * { opacity: 1; transform: none; filter: none; }
+html[data-motion="reduced"] .lift:hover { transform: none; }
+html[data-motion="reduced"] .link-underline::after { transition: none; }
+
+/* ---------------- Skip link ---------------- */
+.skip-link {
+  position: fixed;
+  inset-inline-start: 1rem;
+  top: -100px;
+  z-index: 100;
+  background: var(--primary);
+  color: #06121b;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  font-weight: 800;
+  transition: top var(--dur) var(--ease);
+}
+.skip-link:focus { top: 1rem; }
+
+:target { scroll-margin-top: 6rem; }
