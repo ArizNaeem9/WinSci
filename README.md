@@ -1,113 +1,184 @@
+<div align="center">
+
 # WinSci
 
-A bold, accessible, trilingual nonprofit **learning platform** for **women** and
-**students with disabilities**. Learners take free courses in **AI, programming,
-design and communication**; any creator can **submit a course to teach** (reviewed
-before it goes live). The site showcases student results and drives donations.
-Based in **Abbottabad** (original) and **Lahore**, with **Houston** coming soon.
-Tagline: _every mind wins_.
+### Future skills for every mind
 
-Built with **Next.js 16 (App Router) + React 19 + Tailwind CSS v4 + TypeScript**,
-with a built-in **SQLite database** (`node:sqlite`) for enrollments, course
-submissions, and reviews.
+A free, accessible, trilingual learning platform for women and students with disabilities.
+Learn AI, programming, design, and communication, or become a creator and teach what you know.
 
-## Platform & data
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-19-087EA4?logo=react&logoColor=white)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![WCAG](https://img.shields.io/badge/Accessibility-WCAG_AA-2EC5F0)](#accessibility)
 
-Three API route handlers persist to SQLite (`src/lib/db.ts`, no external deps):
+<img src="public/og.jpg" alt="WinSci hero" width="100%" />
 
-| Endpoint | Method | What it stores |
-|----------|--------|----------------|
-| `/api/enroll` | POST | Course enrollments (name, contact, city, course, access needs) |
-| `/api/submit-course` | POST | Creator course submissions - saved as `pending` for review |
-| `/api/reviews` | GET / POST | GET returns `approved` reviews; POST saves a review as `pending` |
+</div>
 
-- **Moderation:** submissions and reviews are stored `pending`. Approve a review by
-  setting its `status` to `approved` (e.g. an admin script / SQL `UPDATE`), and it
-  appears automatically in the Reviews section.
-- **DB location:** dev uses the OS temp dir (so writes don't trip the file-watcher);
-  production uses `./data/winsci.db`. Override with the `WINSCI_DATA_DIR` env var.
-  Wire the forms to email/Stripe/an admin dashboard as you grow.
+---
 
-## Voice narration ("Listen")
+## Overview
 
-Every "Listen" button and the Sci mascot speak the page aloud.
+WinSci is a nonprofit learning platform built for the people most digital products overlook:
+**women and students with disabilities**, based in **Abbottabad** and **Lahore**, with a Houston
+campus on the way. Anyone can take a course for free, and any creator anywhere can submit a course
+to teach, which our team reviews before it goes live.
 
-- **Cloud TTS (recommended):** set `ELEVENLABS_API_KEY` in `.env.local` (see
-  `.env.example`). The `/api/tts` route then returns one consistent, natural
-  human voice for **all** visitors in **all three languages, including Urdu**.
-  Audio is cached to disk by content hash, so repeat plays are instant and free.
-  Override the voice with `ELEVENLABS_VOICE_ID`.
-- **No key?** It automatically falls back to the visitor's best **device voice**
-  (it ranks the OS voices and picks a natural one — Samantha/Ava, Aria/Jenny
-  "Natural", Google, Mónica — never the robotic default).
+The product is designed around accessibility from the ground up: every page can be **read aloud**,
+switched between **English, Urdu (RTL), and Spanish**, and adapted with **high-contrast, larger-text,
+and reduced-motion** modes that persist between visits.
 
-## Run it
+## Features
+
+#### Learning platform
+- **Course catalog** for Communication, AI & Machine Learning, Programming, and Design.
+- **Free enrollment** with an accessible modal form that captures access needs.
+- **Creator submissions**, every course is reviewed before publishing.
+- **Community reviews** with star ratings and moderation.
+- **Donations** with preset tiers, a fundraising progress bar, and one-time or monthly giving.
+- **Results showcase**: impact stats, a student-project gallery, and success stories.
+
+#### Accessibility (built in, not bolted on)
+- **Audio narration** on every section via a "Listen" button and a friendly mascot.
+- **Accessibility toolbar**: high-contrast mode, three text sizes, and a reduced-motion toggle, all persisted.
+- **Trilingual** content (English / Urdu / Spanish) with full **right-to-left** support and the Noto Nastaliq Urdu typeface.
+- Semantic HTML, skip links, visible focus states, focus-trapped dialogs, ARIA labelling, and 44px+ touch targets.
+
+#### Craft
+- A restrained, navy-and-cyan visual system with a distinct illustrated identity.
+- A cinematic scroll-reveal hero on desktop and a dedicated, text-forward hero on mobile.
+- Hand-tuned micro-interactions and staggered scroll reveals that respect reduced-motion preferences.
+- Mobile-first navigation: a full-screen menu and a sticky action bar for one-thumb access.
+- Optimized imagery (WebP), real Open Graph / Twitter metadata, and a custom favicon set.
+
+## Tech stack
+
+| Area | Choice |
+| --- | --- |
+| Framework | Next.js 16 (App Router) |
+| UI | React 19, TypeScript 5 |
+| Styling | Tailwind CSS v4, shadcn-style primitives |
+| Animation | Framer Motion |
+| Database | SQLite via Node's built-in `node:sqlite` (no external service) |
+| Text-to-speech | ElevenLabs (cloud) with a Web Speech API fallback |
+| Image pipeline | sharp (build-time WebP / OG generation) |
+| Fonts | Space Grotesk (display), Noto Sans (body), Noto Nastaliq Urdu |
+
+## Getting started
+
+### Prerequisites
+- **Node.js 24+** (the API routes use the built-in `node:sqlite`, which is stable from Node 24; developed on Node 26).
+- npm.
+
+### Installation
 
 ```bash
-npm install      # already installed
-npm run dev      # http://localhost:3000
-npm run build    # production build
-npm run lint     # eslint (clean)
+git clone <your-repo-url> winsci
+cd winsci
+npm install
+cp .env.example .env.local   # optional, see Environment variables
+npm run dev
 ```
 
-## Design
+Open [http://localhost:3000](http://localhost:3000).
 
-Dark, bold, illustrated - inspired by Mutwerk (illustrated dark hero + sticker
-logo), Duolingo (module grid with learner counts), Airbnb (results carousel),
-Apple (premium spacing) and Smilebaton (the "Sci" mascot). Deep-navy canvas,
-multi-accent palette (cyan / pink / yellow / purple / green), **Space Grotesk**
-display + **Noto Sans** body. Tokens live in `src/app/globals.css`.
+### Scripts
 
-## What makes it accessible
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm run start` | Run the production build |
+| `npm run lint` | Run ESLint |
 
-- **Trilingual** - English, Urdu (full RTL + Noto Nastaliq Urdu) and Spanish,
-  remembered between visits.
-- **Audio-first** - a **Listen** button on every section/card reads content aloud
-  in the active language (Web Speech API). The **Sci mascot** also reads the page.
-- **Accessibility toolbar** - high-contrast mode (flips to pure black/white +
-  yellow), three text sizes, and a reduce-motion toggle. All persist and apply
-  instantly.
-- **Keyboard + screen reader** - skip link, focus rings, semantic landmarks,
-  ARIA on every control, real labels, 44px+ targets, accessible carousel,
-  accordion, progress bar and radio groups.
-- **Motion-aware** - scroll reveals, stat count-ups and the donation progress
-  bar all respect `prefers-reduced-motion` and the manual toggle.
+## Environment variables
 
-## Sections
+All variables are optional; the app runs without them and degrades gracefully.
 
-Hero (illustrated + mascot) · Modules grid · How it works · Impact stats ·
-Student project gallery (carousel) · Success stories · Locations (Houston +
-Lahore) · Donate (tiers + monthly/one-time + progress bar) · FAQ · Contact ·
-Footer.
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `ELEVENLABS_API_KEY` | Enables cloud text-to-speech (one consistent human voice in all languages). Without it, narration falls back to the visitor's best device voice. | _unset_ |
+| `ELEVENLABS_VOICE_ID` | Override the narration voice. | `EXAVITQu4vr4xnSDxMaL` (Sarah) |
+| `ELEVENLABS_MODEL` | Override the TTS model. | `eleven_multilingual_v2` |
+| `NEXT_PUBLIC_SITE_URL` | Canonical URL for Open Graph, Twitter, and canonical links. | `https://winsci.org` |
+| `WINSCI_DATA_DIR` | Where the SQLite database is stored in production. | `./data` (prod), OS temp dir (dev) |
 
-## Structure
+## Data and API
+
+Submissions persist to a local SQLite database (`src/lib/db.ts`, no external dependency). Three route
+handlers back the forms:
+
+| Endpoint | Method | Stores |
+| --- | --- | --- |
+| `/api/enroll` | `POST` | Course enrollments (name, contact, city, course, access needs) |
+| `/api/submit-course` | `POST` | Creator course submissions, saved as `pending` for review |
+| `/api/reviews` | `GET` / `POST` | `GET` returns approved reviews; `POST` saves a review as `pending` |
+| `/api/tts` | `POST` | Returns narration audio (cached on disk by content hash) |
+
+**Moderation:** course submissions and reviews are stored with `status = 'pending'`. Approve a review
+by setting its status to `approved` (via an admin script or SQL `UPDATE`) and it appears automatically
+in the Reviews section.
+
+## Project structure
 
 ```
 src/
-  app/                  layout (fonts + providers), page (assembly), globals.css
-  i18n/                 LanguageProvider + EN/UR/ES dictionaries
+  app/
+    layout.tsx          Root layout: fonts, metadata, providers
+    page.tsx            Homepage composition
+    globals.css         Design tokens, theme, accessibility modes, motion
+    api/                Route handlers (enroll, submit-course, reviews, tts)
+  i18n/                 LanguageProvider + English / Urdu / Spanish dictionaries
   a11y/                 AccessibilityProvider (contrast / text size / motion)
-  audio/                useSpeech + SpeechProvider (shared TTS state)
+  audio/                Speech engine (cloud TTS + device fallback)
+  lib/                  SQLite helpers, utilities
   components/
-    icons.tsx           SVG icon set (no emojis)
-    Logo, Header, LanguageSwitcher, AccessibilityToolbar, SpeakButton, Reveal,
-    SectionHeading, Mascot
-    illustrations/      LearnersScene (hero illustration)
+    ui/                 Reusable primitives (Button, scroll hero, background paths)
     sections/           Hero, Modules, Approach, Impact, Gallery, Stories,
-                        Locations, Donate, Faq, Contact, Footer
+                        Locations, Teach, Donate, FAQ, Contact, Footer
+    illustrations/      SVG artwork
+public/                 Optimized images, icons, Open Graph image
 ```
 
-## Customizing
+## Accessibility
 
-- **Colors / theme:** `src/app/globals.css` (`:root` tokens).
-- **All copy, modules, projects, donation tiers & translations:**
-  `src/i18n/translations.ts`.
-- **Donation flow** currently shows tiers + a demo submit - wire the form in
-  `src/components/sections/Donate.tsx` to a payment provider (e.g. Stripe).
-- **Contact form** shows a success state on submit - wire `onSubmit` in
-  `src/components/sections/Contact.tsx` to your backend/email.
-- **Project gallery** uses generated SVG thumbnails - swap for real images in
-  `src/components/sections/Gallery.tsx`.
+Accessibility is a core requirement, not an afterthought:
 
-> Branding ("WinSci", sticker logo, palette, mascot) and all stats/projects are
-> placeholders to start from - swap freely.
+- **Audio-first:** any content can be heard aloud, important for non-reading users.
+- **Adaptable UI:** high-contrast mode, larger text, and reduced motion, remembered across sessions.
+- **Multilingual + RTL:** complete English, Urdu, and Spanish translations with correct directionality.
+- **Keyboard and screen reader:** semantic landmarks, skip link, focus management, ARIA, and large touch targets.
+- **Motion-aware:** every animation honors `prefers-reduced-motion` and the in-app toggle.
+
+## Internationalization
+
+All copy lives in `src/i18n/translations.ts`, keyed by section across `en`, `ur`, and `es`. The active
+language is stored locally and applied to `<html lang>` and `dir`, switching the layout to right-to-left
+and the Urdu typeface automatically. Adding a language means adding one dictionary entry.
+
+## Customizing content
+
+- **Copy, courses, projects, reviews, donation tiers, locations:** `src/i18n/translations.ts`
+- **Colors, typography, spacing, motion:** `src/app/globals.css` (`:root` tokens)
+- **Hero image:** replace `public/hero-learners.webp` (used by every hero variant)
+- **Payments:** the donation form is UI-complete; connect it to a provider such as Stripe in `src/components/sections/Donate.tsx`
+
+## Deployment
+
+The app builds to a standard Next.js output and runs anywhere Node 24+ is available. When deploying:
+
+1. Set `NEXT_PUBLIC_SITE_URL` to your production domain.
+2. Set `ELEVENLABS_API_KEY` to enable the cloud voice (optional).
+3. Point `WINSCI_DATA_DIR` at a persistent, writable volume so the SQLite database survives restarts.
+
+## License
+
+© WinSci. All rights reserved. This project is currently private.
+
+---
+
+<div align="center">
+Built to be used by everyone.
+</div>
